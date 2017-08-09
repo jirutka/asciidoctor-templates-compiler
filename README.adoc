@@ -1,6 +1,31 @@
 = Asciidoctor Templates Compiler
 
+This tool allows to precompile Slim templates into Ruby code and assemble them into a single-file pure Ruby converter (backend).
+
 TODO
+
+
+== Usage
+
+[source, rb]
+----
+require 'asciidoctor-templates-compiler'
+
+File.open('html_custom_converter.rb', 'w') do |file|
+  Asciidoctor::TemplatesCompiler::Slim.compile_converter(
+      templates_dir: 'data/templates',
+      class_name: 'HtmlCustomConverter',
+      delegate_backend: 'html5',
+      register_for: ['html-custom'],
+      backend_info: {
+        basebackend: 'html',
+        outfilesuffix: '.html',
+        filetype: 'html',
+      },
+      pretty: true,
+      output: file)
+end
+----
 
 
 == License
