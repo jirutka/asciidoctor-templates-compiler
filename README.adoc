@@ -4,6 +4,10 @@
 :gem-name: asciidoctor-templates-compiler
 :gem-version: 0.1.0
 
+ifdef::env-github[]
+image:https://img.shields.io/gem/v/{gem-name}.svg?style=flat[Gem Version, link="https://rubygems.org/gems/{gem-name}"]
+endif::env-github[]
+
 This tool allows to precompile Slim templates into Ruby code and assemble them into a single-file pure Ruby converter (backend).
 
 TODO
