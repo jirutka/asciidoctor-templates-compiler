@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
 
   s.summary       = 'Compile templates-based Asciidoctor converter (backend) into a single Ruby file'
 
-  s.files         = Dir['lib/**', '*.gemspec', 'LICENSE*', 'README*']
+  s.files         = Dir['lib/**/*', '*.gemspec', 'LICENSE*', 'README*']
 
   s.required_ruby_version = '>= 2.3'
 
