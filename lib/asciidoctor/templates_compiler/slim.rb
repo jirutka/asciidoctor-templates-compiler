@@ -2,11 +2,13 @@ require 'asciidoctor/converter'
 require 'asciidoctor/converter/template'
 require 'asciidoctor/templates_compiler/version'
 require 'asciidoctor/templates_compiler/base'
+require 'corefines'
 require 'slim'
 require 'slim/include'
 
 module Asciidoctor::TemplatesCompiler
   class Slim < Base
+    using Corefines::Object::then
 
     protected
 
@@ -24,6 +26,10 @@ module Asciidoctor::TemplatesCompiler
 
     def find_templates(dirname)
       Dir.glob("#{dirname}/[^_]*.slim")
+    end
+
+    def read_helpers(templates_dir)
+      super.then { |s| s.sub('module Slim::Helpers', 'module Helpers') }
     end
 
     def engine_options

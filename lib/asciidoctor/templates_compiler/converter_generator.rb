@@ -58,7 +58,7 @@ module Asciidoctor::TemplatesCompiler
     def helpers_code
       <<~EOF.indent(2, ' ')
         #{separator 'Begin of Helpers'}
-        #{@helpers_code.sub('module Slim::Helpers', 'module Helpers')}
+        #{@helpers_code}
 
         # Make Helpers' constants accessible from transform methods.
         Helpers.constants.each do |const|
