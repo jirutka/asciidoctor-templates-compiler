@@ -2,7 +2,7 @@
 :source-language: ruby
 // custom
 :gem-name: asciidoctor-templates-compiler
-:gem-version: 0.0.0
+:gem-version: 0.1.0
 
 This tool allows to precompile Slim templates into Ruby code and assemble them into a single-file pure Ruby converter (backend).
 
