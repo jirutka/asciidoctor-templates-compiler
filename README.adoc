@@ -1,15 +1,39 @@
 = Asciidoctor Templates Compiler
+:source-language: ruby
+// custom
+:gem-name: asciidoctor-templates-compiler
+:gem-version: 0.0.0
 
 This tool allows to precompile Slim templates into Ruby code and assemble them into a single-file pure Ruby converter (backend).
 
 TODO
 
 
+== Installation
+
+Add this line to your application’s Gemfile:
+
+[source, subs="+attributes"]
+group :development do
+  gem '{gem-name}', '~> {gem-version}'
+end
+
+or to your gemspec:
+
+[source, subs="+attributes"]
+s.add_development_dependency '{gem-name}', '~> {gem-version}'
+
+and then execute:
+
+[source, sh]
+$ bundle install
+
+
 == Usage
 
-[source, rb]
+[source, subs="+attributes"]
 ----
-require 'asciidoctor-templates-compiler'
+require '{gem-name}'
 
 File.open('html_custom_converter.rb', 'w') do |file|
   Asciidoctor::TemplatesCompiler::Slim.compile_converter(
