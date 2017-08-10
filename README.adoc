@@ -2,7 +2,7 @@
 :source-language: ruby
 // custom
 :gem-name: asciidoctor-templates-compiler
-:gem-version: 0.1.1
+:gem-version: 0.1.2
 
 ifdef::env-github[]
 image:https://img.shields.io/gem/v/{gem-name}.svg?style=flat[Gem Version, link="https://rubygems.org/gems/{gem-name}"]
