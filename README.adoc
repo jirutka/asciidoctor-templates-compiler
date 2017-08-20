@@ -36,15 +36,16 @@ $ bundle install
 == Usage
 
 [source, subs="+attributes"]
+.Minimal example
 ----
 require '{gem-name}'
 
-File.open('html_custom_converter.rb', 'w') do |file|
+File.open('converter.rb', 'w') do |file|
   Asciidoctor::TemplatesCompiler::Slim.compile_converter(
       templates_dir: 'data/templates',
-      class_name: 'HtmlCustomConverter',
+      class_name: 'ShinyHtml::Converter',
       delegate_backend: 'html5',
-      register_for: ['html-custom'],
+      register_for: ['shiny-html'],
       backend_info: {
         basebackend: 'html',
         outfilesuffix: '.html',
@@ -54,6 +55,60 @@ File.open('html_custom_converter.rb', 'w') do |file|
       output: file)
 end
 ----
+
+[source, subs="+attributes"]
+.Example of usage in Rakefile
+----
+#!/usr/bin/env rake
+
+CONVERTER_FILE = 'lib/asciidoctor/shiny_html/converter.rb'
+TEMPLATES_DIR = 'data/templates'
+
+namespace :build do
+
+  file CONVERTER_FILE, [:mode] => FileList["#{TEMPLATES_DIR}/*"] do |t, args|
+    require '{gem-name}'
+
+    File.open(CONVERTER_FILE, 'w') do |file|
+      $stderr.puts "Generating #{file.path}."
+      Asciidoctor::TemplatesCompiler::Slim.compile_converter(
+          templates_dir: TEMPLATES_DIR,
+          class_name: 'Asciidoctor::ShinyHtml::Converter',
+          delegate_backend: 'html5',
+          register_for: ['shiny-html'],
+          backend_info: {
+            basebackend: 'html',
+            outfilesuffix: '.html',
+            filetype: 'html',
+          },
+          pretty: (args[:mode] == :pretty),
+          output: file)
+    end
+  end
+
+  namespace :converter do
+    desc 'Compile Slim templates and generate converter.rb (pretty mode)'
+    task :pretty do
+      Rake::Task[CONVERTER_FILE].invoke(:pretty)
+    end
+
+    desc 'Compile Slim templates and generate converter.rb (fast mode)'
+    task :fast do
+      Rake::Task[CONVERTER_FILE].invoke
+    end
+  end
+
+  task :converter => 'converter:pretty'
+end
+
+task :build => 'build:converter:pretty'
+
+task :clean do
+  rm_rf CONVERTER_FILE
+end
+----
+
+You can also look into https://github.com/jirutka/asciidoctor-html5s/[asciidoctor-html5s] for a real-world example including integration with https://github.com/asciidoctor/asciidoctor-doctest/[Asciidoctor::DocTest].
 
 
 == License
