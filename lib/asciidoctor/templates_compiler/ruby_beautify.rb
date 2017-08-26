@@ -10,7 +10,7 @@ module Asciidoctor::TemplatesCompiler
       ::RubyBeautify::NEW_LINES.push(:on_semicolon)  # XXX: sandbox somehow?
 
       s = "module M_\n#{code}\nend\n"
-      s.gsub! /^;/, ''            # remove leading semicolons
+      s.gsub! /^[ \t]*;/, ''      # remove leading semicolons
       s.gsub! /;\s*$/, ''         # remove trailing semicolons
       s.replace ::RubyBeautify.pretty_string(s, indent_token: "\1", indent_count: indent_count)
       s.gsub! ";\1", "\n\1"       # remove trailing semicolons after formatting
