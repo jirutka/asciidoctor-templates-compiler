@@ -1,5 +1,6 @@
 require 'rspec'
 require 'simplecov'
+require_relative 'support/matchers'
 
 RSpec.configure do |config|
   config.color = true
