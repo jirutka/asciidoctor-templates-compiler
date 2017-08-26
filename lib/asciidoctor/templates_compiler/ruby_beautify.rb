@@ -9,14 +9,14 @@ module Asciidoctor::TemplatesCompiler
       new_lines_old = ::RubyBeautify::NEW_LINES
       ::RubyBeautify::NEW_LINES.push(:on_semicolon)  # XXX: sandbox somehow?
 
-      s = "def __\n#{code}\nend\n"
-      s.gsub! /^;/, ''         # remove leading semicolons
-      s.gsub! /;\s*$/, ''      # remove trailing semicolons
+      s = "module M_\n#{code}\nend\n"
+      s.gsub! /^;/, ''            # remove leading semicolons
+      s.gsub! /;\s*$/, ''         # remove trailing semicolons
       s.replace ::RubyBeautify.pretty_string(s, indent_token: "\1", indent_count: indent_count)
-      s.gsub! ";\1", "\n\1"    # remove trailing semicolons after formatting
-      s.gsub! "\1", ' '        # replace placeholder indent char with space
-      s.sub! /\Adef __\n/, ''  # remove wrapper method
-      s.sub! /\nend\n\z/, ''   # remove wrapper method
+      s.gsub! ";\1", "\n\1"       # remove trailing semicolons after formatting
+      s.gsub! "\1", ' '           # replace placeholder indent char with space
+      s.sub! /\Amodule M_\n/, ''  # remove wrapper module
+      s.sub! /\nend\n\z/, ''      # remove wrapper module
 
       ::RubyBeautify::NEW_LINES.replace(new_lines_old)  # XXX: not thread-safe
       s
