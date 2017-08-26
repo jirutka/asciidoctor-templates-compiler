@@ -18,4 +18,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'corefines', '~> 1.2'
   s.add_runtime_dependency 'slim', '>= 2.1', '< 4.0'
   s.add_runtime_dependency 'ruby-beautify', '~> 0.97'
+
+  s.add_development_dependency 'rake', '~> 12.0'
+  s.add_development_dependency 'rspec', '~> 3.6'
+  s.add_development_dependency 'simplecov', '~> 0.14'
 end
