@@ -71,7 +71,8 @@ module Asciidoctor::TemplatesCompiler
 
     def initialization_code
       setup_backend_info = @backend_info
-          .map { |k, v| "  #{k} #{v.inspect}" }.join("\n")
+          .map { |k, v| "  #{k} #{v.inspect}" }
+          .join("\n") unless @backend_info.empty?
 
       if !@register_for.empty?
         register_for = "register_for #{@register_for.map(&:inspect).join(', ')}\n"
