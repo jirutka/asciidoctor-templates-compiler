@@ -144,7 +144,7 @@ module Asciidoctor::TemplatesCompiler
             node.extend(Helpers)
             node.instance_eval do
               converter.set_local_variables(binding, opts) unless opts.empty?
-          #{code.indent(4, ' ')}
+          #{code.indent(6, ' ')}
             end
           end
         EOF

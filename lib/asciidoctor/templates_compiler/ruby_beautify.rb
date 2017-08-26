@@ -14,6 +14,7 @@ module Asciidoctor::TemplatesCompiler
       s.gsub! /;\s*$/, ''         # remove trailing semicolons
       s.replace ::RubyBeautify.pretty_string(s, indent_token: "\1", indent_count: indent_count)
       s.gsub! ";\1", "\n\1"       # remove trailing semicolons after formatting
+      s.gsub! /^#{"\1" * indent_count}/, ''  # remove redundant indentation level
       s.gsub! "\1", ' '           # replace placeholder indent char with space
       s.sub! /\Amodule M_\n/, ''  # remove wrapper module
       s.sub! /\nend\n\z/, ''      # remove wrapper module
