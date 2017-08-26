@@ -7,7 +7,7 @@ module Asciidoctor::TemplatesCompiler
     using Corefines::String::indent
 
     class << self
-      def generate(output: nil, **opts)
+      def generate(output: StringIO.new, **opts)
         new(**opts).call(output)
       end
 
