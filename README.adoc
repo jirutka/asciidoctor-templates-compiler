@@ -3,8 +3,11 @@
 // custom
 :gem-name: asciidoctor-templates-compiler
 :gem-version: 0.1.2
+:gh-name: jirutka/{gem-name}
+:gh-branch: master
 
 ifdef::env-github[]
+image:https://travis-ci.org/{gh-name}.svg?branch={gh-branch}[Build Status, link="https://travis-ci.org/{gh-name}"]
 image:https://img.shields.io/gem/v/{gem-name}.svg?style=flat[Gem Version, link="https://rubygems.org/gems/{gem-name}"]
 endif::env-github[]
 
