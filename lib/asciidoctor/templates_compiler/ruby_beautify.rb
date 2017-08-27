@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'asciidoctor/templates_compiler/version'
 require 'ruby-beautify'
 
@@ -13,7 +14,7 @@ module Asciidoctor::TemplatesCompiler
       new_lines_old = NEW_LINES
       NEW_LINES.push(:on_semicolon)  # XXX: sandbox somehow?
 
-      s = "module M_\n#{code}\nend\n"
+      s = +"module M_\n#{code}\nend\n"
       s.gsub! /^[ \t]*;/, ''      # remove leading semicolons
       s.gsub! /;\s*$/, ''         # remove trailing semicolons
       s.replace pretty_string_orig(s, indent_token: "\1", indent_count: indent_count)

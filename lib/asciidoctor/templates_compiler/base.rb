@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'asciidoctor/templates_compiler/version'
 require 'asciidoctor/templates_compiler/converter_generator'
 require 'asciidoctor/templates_compiler/ruby_beautify'

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'asciidoctor/converter'
 require 'asciidoctor/converter/template'
 require 'asciidoctor/templates_compiler/version'
