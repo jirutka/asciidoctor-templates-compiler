@@ -1,0 +1,65 @@
+AllCops:
+  TargetRubyVersion: 2.3
+
+# I prefer no empty line between magic comment and requires.
+Layout/EmptyLineAfterMagicComment:
+  Enabled: false
+
+# I prefer to put two spaces before inline comment, Rubocop does not allow to
+# set exception for this.
+Layout/ExtraSpacing:
+  Enabled: false
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Lint/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+Metrics/AbcSize:
+  Max: 25
+
+Metrics/ClassLength:
+  Max: 150
+
+Metrics/LineLength:
+  Max: 100
+
+Metrics/MethodLength:
+  Max: 40
+
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+# I use it for purpose with Corefines, e.g. `using Corefines::String::indent`.
+Style/ColonMethodCall:
+  Enabled: false
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+
+Style/FileName:
+  Exclude:
+    - 'lib/asciidoctor-templates-compiler.rb'
+
+Style/HashSyntax:
+  Exclude:
+    - Rakefile
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - Gemfile*
+    - Rakefile
+    - '*.gemspec'
+
+Style/NegatedIf:
+  Enabled: false
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: comma

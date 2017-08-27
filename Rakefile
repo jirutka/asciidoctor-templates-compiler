@@ -11,3 +11,15 @@ begin
 rescue LoadError => e
   warn "#{e.path} is not available"
 end
+
+begin
+  require 'rubocop/rake_task'
+
+  RuboCop::RakeTask.new(:rubocop) do |t|
+    t.options = ['--display-cop-names', '--fail-level', 'W']
+  end
+
+  task :default => :rubocop
+rescue LoadError => e
+  warn "#{e.path} is not available"
+end

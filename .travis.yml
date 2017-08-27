@@ -11,6 +11,8 @@ matrix:
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
+script:
+  - bundle exec rake spec
 deploy:
   provider: rubygems
   api_key:
