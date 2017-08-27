@@ -16,7 +16,7 @@ module Asciidoctor::TemplatesCompiler
 
 
     def compile_converter(output: StringIO.new, templates_dir:, pretty: false, **opts)
-      unless Dir.exists? templates_dir
+      unless Dir.exist? templates_dir
         fail "Templates directory '#{templates_dir}' does not exist"
       end
 
@@ -61,7 +61,7 @@ module Asciidoctor::TemplatesCompiler
 
     def read_helpers(templates_dir)
       path = File.join(templates_dir, 'helpers.rb')
-      IO.read(path) if File.exists? path
+      IO.read(path) if File.exist? path
     end
 
     def transform_name_from_tmpl_name(filename)
