@@ -30,17 +30,15 @@ module Asciidoctor::TemplatesCompiler
 
     alias_method :call, :compile_converter
 
-
     protected
 
+    # @abstract
     def compile_template(filename, backend_info: {})
-      fail NotImplementedError
     end
 
+    # @abstract
     def find_templates(dirname)
-      fail NotImplementedError
     end
-
 
     def beautify_code(code, **opts)
       RubyBeautify.call(code, **opts)
