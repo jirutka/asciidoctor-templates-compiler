@@ -12,12 +12,11 @@ module Asciidoctor::TemplatesCompiler
         new(**opts).call(output)
       end
 
-      alias_method :call, :generate
+      alias call generate
     end
 
-
     def initialize(class_name:, transforms_code:, helpers_code: nil,
-                   register_for: [], backend_info: {}, delegate_backend: nil, **_)
+                   register_for: [], backend_info: {}, delegate_backend: nil, **)
       @class_name = class_name
       @transforms_code = transforms_code
       @helpers_code = helpers_code
@@ -37,16 +36,16 @@ module Asciidoctor::TemplatesCompiler
       out
     end
 
-    alias_method :call, :generate
+    alias call generate
 
     protected
 
     def head_code
       init_modules = @class_name
-          .split('::')[0..-2]
-          .map { |name| "module #{name};"}
-          .tap { |ary| ary.push('end ' * ary.size) }
-          .join(' ').strip
+        .split('::')[0..-2]
+        .map { |name| "module #{name};" }
+        .tap { |ary| ary.push('end ' * ary.size) }
+        .join(' ').strip
 
       <<~EOF
         # This file has been generated!
@@ -71,9 +70,9 @@ module Asciidoctor::TemplatesCompiler
     end
 
     def initialization_code
-      setup_backend_info = @backend_info
-          .map { |k, v| "  #{k} #{v.inspect}" }
-          .join("\n") unless @backend_info.empty?
+      setup_backend_info = if !@backend_info.empty?
+        @backend_info.map { |k, v| "  #{k} #{v.inspect}" }.join("\n")
+      end
 
       if !@register_for.empty?
         register_for = "register_for #{@register_for.map(&:inspect).join(', ')}\n"
@@ -87,10 +86,10 @@ module Asciidoctor::TemplatesCompiler
 
           converter = factory.create(delegate_backend, backend_info)
           @delegate_converter = if converter == self
-              factory.new.create(delegate_backend, backend_info)
-            else
-              converter
-            end
+            factory.new.create(delegate_backend, backend_info)
+          else
+            converter
+          end
         EOF
       end
 
@@ -98,8 +97,8 @@ module Asciidoctor::TemplatesCompiler
         register_for,
         'def initialize(backend, opts = {})',
         '  super',
-           setup_backend_info,
-           delegate_converter,
+        setup_backend_info,
+        delegate_converter,
         'end',
         '',
       ].compact.join("\n").indent(2, ' ')
@@ -107,10 +106,10 @@ module Asciidoctor::TemplatesCompiler
 
     def convert_method_code
       converter = if @delegate_backend
-          'respond_to?(transform) ? self : @delegate_converter'
-        else
-          'self'
-        end
+        'respond_to?(transform) ? self : @delegate_converter'
+      else
+        'self'
+      end
 
       <<~EOF.indent(2, ' ')
         def convert(node, transform = nil, opts = {})

@@ -8,12 +8,13 @@ module Asciidoctor::TemplatesCompiler
 
     subject(:instance) do
       described_class.new(
-          class_name: class_name,
-          transforms_code: transforms_code,
-          helpers_code: helpers_code,
-          register_for: register_for,
-          backend_info: backend_info,
-          delegate_backend: delegate_backend)
+        class_name: class_name,
+        transforms_code: transforms_code,
+        helpers_code: helpers_code,
+        register_for: register_for,
+        backend_info: backend_info,
+        delegate_backend: delegate_backend,
+      )
     end
 
     let(:class_name) { 'MyConverter' }
@@ -27,7 +28,9 @@ module Asciidoctor::TemplatesCompiler
     shared_examples :unknown_keyword_arg do |meth|
       it 'does not fail when given unknown keyword argument' do
         expect {
-          described_class.send(meth, class_name: class_name, transforms_code: [], non_existing_arg: true)
+          described_class.send(meth, class_name: class_name,
+                                     transforms_code: [],
+                                     non_existing_arg: true)
         }.to_not raise_error
       end
     end
@@ -79,7 +82,7 @@ module Asciidoctor::TemplatesCompiler
         end
 
         it 'starts with comment `# This file has been generated!`' do
-          is_expected.to match /\A# This file has been generated!\n/
+          is_expected.to match(/\A# This file has been generated!\n/)
         end
 
         it 'defines method #set_local_variables' do
@@ -107,7 +110,7 @@ module Asciidoctor::TemplatesCompiler
             let(:class_name) { 'Test::MyConverter' }
 
             it "declares class_name's module before the class" do
-              is_expected.to match /module Test; end.*class #{class_name}/m
+              is_expected.to match(/module Test; end.*class #{class_name}/m)
             end
 
             include_examples :converter_class
@@ -117,7 +120,7 @@ module Asciidoctor::TemplatesCompiler
             let(:class_name) { 'Mod1::Mod2::Conv' }
 
             it "declares all class_name's modules before the class" do
-              is_expected.to match /module Mod1; module Mod2; end end.*class #{class_name}/m
+              is_expected.to match(/module Mod1; module Mod2; end end.*class #{class_name}/m)
             end
 
             include_examples :converter_class
@@ -127,7 +130,7 @@ module Asciidoctor::TemplatesCompiler
         context 'when transforms_code is not empty' do
           let(:transforms_code) {{
             document: %(s = ""\ns << "<document>"),
-            inline_image: '"<inline_image>"'
+            inline_image: '"<inline_image>"',
           }}
 
           it 'defines correct transform method for each item' do
@@ -206,7 +209,7 @@ module Asciidoctor::TemplatesCompiler
 
         context 'when backend_info' do
           context 'is empty' do
-            it "no backend_info parameters are set in constructor" do
+            it 'no backend_info parameters are set in constructor' do
               is_expected.to include <<~EOF.indent(2)
                 def initialize(backend, opts = {})
                   super
@@ -216,7 +219,7 @@ module Asciidoctor::TemplatesCompiler
           end
 
           context 'is not empty' do
-            let(:backend_info) { {basebackend: 'docbook', outfilesuffix: '.xml'} }
+            let(:backend_info) {{ basebackend: 'docbook', outfilesuffix: '.xml' }}
 
             it 'backend_info parameters are set in constructor' do
               is_expected.to include <<~EOF.indent(2)
@@ -269,10 +272,10 @@ module Asciidoctor::TemplatesCompiler
 
                   converter = factory.create(delegate_backend, backend_info)
                   @delegate_converter = if converter == self
-                      factory.new.create(delegate_backend, backend_info)
-                    else
-                      converter
-                    end
+                    factory.new.create(delegate_backend, backend_info)
+                  else
+                    converter
+                  end
                 end
               EOF
             end

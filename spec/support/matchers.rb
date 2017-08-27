@@ -25,7 +25,7 @@ RSpec::Matchers.define :be_valid_ruby do
   # See https://www.ruby-forum.com/topic/4419079#1130079
   def check_syntax!(code)
     catch(:good) do
-      eval("BEGIN { throw :good }; #{code}")
+      eval("BEGIN { throw :good }; #{code}")  # rubocop:disable Security/Eval
     end
   end
 end

@@ -6,19 +6,17 @@ require 'stringio'
 
 module Asciidoctor::TemplatesCompiler
   class Base
-
     class << self
       def compile_converter(**opts)
         new.compile_converter(**opts)
       end
 
-      alias_method :call, :compile_converter
+      alias call compile_converter
     end
-
 
     def compile_converter(output: StringIO.new, templates_dir:, pretty: false, **opts)
       unless Dir.exist? templates_dir
-        fail "Templates directory '#{templates_dir}' does not exist"
+        raise "Templates directory '#{templates_dir}' does not exist"
       end
 
       backend_info = opts[:backend_info] || {}
@@ -26,10 +24,10 @@ module Asciidoctor::TemplatesCompiler
       transforms_code = compile_templates(templates, backend_info: backend_info, pretty: pretty)
 
       generate_class(output: output, transforms_code: transforms_code,
-          helpers_code: read_helpers(templates_dir), **opts)
+                     helpers_code: read_helpers(templates_dir), **opts)
     end
 
-    alias_method :call, :compile_converter
+    alias call compile_converter
 
     protected
 
@@ -65,8 +63,8 @@ module Asciidoctor::TemplatesCompiler
 
     def transform_name_from_tmpl_name(filename)
       File.basename(filename)
-          .sub(/\..*$/, '')
-          .sub(/^block_/, '')
+        .sub(/\..*$/, '')
+        .sub(/^block_/, '')
     end
   end
 end

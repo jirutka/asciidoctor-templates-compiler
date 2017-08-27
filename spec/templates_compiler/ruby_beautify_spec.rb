@@ -19,12 +19,12 @@ module Asciidoctor::TemplatesCompiler
 
       it 'indents code without semicolons' do
         expect( pretty_string <<~EOF
-            class Foo
-            def hi
-            puts "Hello!"
-            end
-            end
-          EOF
+          class Foo
+          def hi
+          puts "Hello!"
+          end
+          end
+        EOF
         ).to eq <<~EOF
           class Foo
             def hi
@@ -48,9 +48,9 @@ module Asciidoctor::TemplatesCompiler
 
       it 'replaces in-between semicolons with newlines and indents' do
         expect( pretty_string <<~EOF
-            _buf = ''; if true
-            _buf << '<kbd>'; else; _buf << '<kbd id="key">'; end; _buf
-          EOF
+          _buf = ''; if true
+          _buf << '<kbd>'; else; _buf << '<kbd id="key">'; end; _buf
+        EOF
         ).to eq <<~EOF
           _buf = ''
           if true

@@ -13,6 +13,7 @@ matrix:
     - rvm: jruby-head
 script:
   - bundle exec rake spec
+  - bundle exec rake rubocop
 deploy:
   provider: rubygems
   api_key:
