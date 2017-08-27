@@ -7,6 +7,9 @@ rvm:
   - jruby-9.1.12.0
   - ruby-head
   - jruby-head
+env:
+  global:
+    secure: "Hfal+yUT5IjdHvx9EXChJveD6DKhExDxvtdkLe585egSMzW0p6oujFTpLD2EyGPV6Yyfyd/SijTKrgOgOsuXeBAKs9XSjy5HLLaieXoSnRordOPtp1xujm9T1l5oi1xmoh8fS1c/RliMtspHmMXpyEngwuVS8o0h4AUCK+VE+f9Wap90mE+sH/sZr3Dt7lQd0f+9dyCK5U/zpiyZVTPNHlJyHewudBlNq2dDN16ldF14SKcBxXmZIFP8FpF+gax8XjjjBwr247qzXyEUUC9CfRBiBIP6Cdv62E+KefGLI09I48KdYVDA0221mtYuqLONJv2JyXfxSi3kSAFCVKywNLj4HuR/ixnQ8VKFHkltRu6VTzr47OQbn+83u65r1YP14doTHo8RaiL5/CfmdnNptsgE3AxHNYV4ekizCWv2tt5fOSV2F4z3JICLDY1gCElOGYjfmoBxhmCIrF9h2V1RQnCefu3AnJZ2cUbCkLnaz39dROD0kWAkml0E3mvYt6vkqOkraRB+kmjcqtIGyjfgN2HfJeFMQpqbAyB9vCBvn0/ki3eeHnHDugb0A4e7NfAwgvFFKTwHddm9zaCpEblSQRQ5027eUs3c6fNxQGO5Yl6UP6QY5tycNhZrvYtuoqkz5648DZX+X9el8KT7e0SVgFu6AWbvtC2q0uifjSHD4ao="  # CODACY_PROJECT_TOKEN
 matrix:
   allow_failures:
     - rvm: ruby-head
