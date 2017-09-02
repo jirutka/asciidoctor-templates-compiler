@@ -14,14 +14,18 @@ module Asciidoctor::TemplatesCompiler
     DEFAULT_ENGINE_OPTS =
       ::Asciidoctor::Converter::TemplateConverter::DEFAULT_ENGINE_OPTIONS[:slim].dup.freeze
 
+    def compile_converter(backend_info: {}, engine_opts: {}, **)
+      engine_opts[:format] ||= backend_info.fetch('htmlsyntax', 'html').to_sym
+      super
+    end
+
     protected
 
-    def compile_template(filename, backend_info: {})
-      htmlsyntax = backend_info[:htmlsyntax] || backend_info['htmlsyntax'] || :html
-      opts = DEFAULT_ENGINE_OPTS.merge(file: filename, format: htmlsyntax.to_sym)
+    def compile_template(filename, engine_opts = {})
+      engine_opts = DEFAULT_ENGINE_OPTS.merge(**engine_opts, file: filename)
       content = IO.read(filename)
 
-      ::Slim::Engine.new(opts).call(content).tap do |code|
+      ::Slim::Engine.new(engine_opts).call(content).tap do |code|
         code.scan(/::(?:Slim|Temple)(?:\:\:\w+)*/).uniq.each do |name|
           $stderr.puts "WARNING: Compiled template '#{filename}' references constant #{name}"
         end

@@ -54,6 +54,9 @@ delegate_backend::
   Name of the backend (converter) to use as a fallback for AST nodes not supported by your converter.
   If not specified (default), no fallback will be used and converter will raise `NoMethodError` when it try to convert an unsupported node.
 
+engine_opts::
+  A Hash of options to pass into the templating engine that compiles templates into Ruby code.
+
 output::
   An output stream (`IO` object like opened file, `$stdout`, …) to write the generated converter into.
   Default is `StringIO.new` (it’s the return value of `#compile_converter`).

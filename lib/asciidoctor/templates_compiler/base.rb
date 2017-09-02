@@ -14,16 +14,15 @@ module Asciidoctor::TemplatesCompiler
       alias call compile_converter
     end
 
-    def compile_converter(output: StringIO.new, templates_dir:, pretty: false, **opts)
+    def compile_converter(templates_dir:, engine_opts: {}, pretty: false, **opts)
       unless Dir.exist? templates_dir
         raise "Templates directory '#{templates_dir}' does not exist"
       end
 
-      backend_info = opts[:backend_info] || {}
       templates = find_templates(templates_dir)
-      transforms_code = compile_templates(templates, backend_info: backend_info, pretty: pretty)
+      transforms_code = compile_templates(templates, engine_opts, pretty: pretty)
 
-      generate_class(output: output, transforms_code: transforms_code,
+      generate_class(transforms_code: transforms_code,
                      helpers_code: read_helpers(templates_dir), **opts)
     end
 
@@ -32,7 +31,7 @@ module Asciidoctor::TemplatesCompiler
     protected
 
     # @abstract
-    def compile_template(filename, backend_info: {})
+    def compile_template(filename, engine_opts = {})
     end
 
     # @abstract
@@ -43,9 +42,9 @@ module Asciidoctor::TemplatesCompiler
       RubyBeautify.call(code, **opts)
     end
 
-    def compile_templates(template_files, backend_info: {}, pretty: false)
+    def compile_templates(template_files, engine_opts = {}, pretty: false)
       template_files.lazy.map do |path|
-        code = compile_template(path, backend_info: backend_info)
+        code = compile_template(path, engine_opts)
         code = beautify_code(code) if pretty
 
         [transform_name_from_tmpl_name(path), code]
