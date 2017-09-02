@@ -5,6 +5,9 @@ AllCops:
 Layout/EmptyLineAfterMagicComment:
   Enabled: false
 
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
 # I prefer to put two spaces before inline comment, Rubocop does not allow to
 # set exception for this.
 Layout/ExtraSpacing:
