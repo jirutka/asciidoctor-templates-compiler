@@ -11,11 +11,14 @@ module Asciidoctor::TemplatesCompiler
   class Slim < Base
     using Corefines::Object::then
 
+    DEFAULT_ENGINE_OPTS =
+      ::Asciidoctor::Converter::TemplateConverter::DEFAULT_ENGINE_OPTIONS[:slim].dup.freeze
+
     protected
 
     def compile_template(filename, backend_info: {})
       htmlsyntax = backend_info[:htmlsyntax] || backend_info['htmlsyntax'] || :html
-      opts = engine_options.merge(file: filename, format: htmlsyntax.to_sym)
+      opts = DEFAULT_ENGINE_OPTS.merge(file: filename, format: htmlsyntax.to_sym)
       content = IO.read(filename)
 
       ::Slim::Engine.new(opts).call(content).tap do |code|
@@ -31,10 +34,6 @@ module Asciidoctor::TemplatesCompiler
 
     def read_helpers(templates_dir)
       super.then { |s| s.sub('module Slim::Helpers', 'module Helpers') }
-    end
-
-    def engine_options
-      ::Asciidoctor::Converter::TemplateConverter::DEFAULT_ENGINE_OPTIONS[:slim]
     end
   end
 end
