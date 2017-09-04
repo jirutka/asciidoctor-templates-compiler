@@ -147,7 +147,7 @@ module Asciidoctor::TemplatesCompiler
         out << <<~EOF.indent(2, ' ')
 
           def #{name}(node, opts = {})
-            node.extend(Helpers)
+          #{'  node.extend(Helpers)' unless @helpers_code.blank?}
             node.instance_eval do
               converter.set_local_variables(binding, opts) unless opts.empty?
           #{code.indent(6, ' ')}

@@ -141,17 +141,29 @@ module Asciidoctor::TemplatesCompiler
             inline_image: '"<inline_image>"',
           }}
 
-          it 'defines correct transform method for each item' do
-            transforms_code.each do |name, code|
-              is_expected.to include <<~EOF.indent(2)
-                def #{name}(node, opts = {})
-                  node.extend(Helpers)
-                  node.instance_eval do
-                    converter.set_local_variables(binding, opts) unless opts.empty?
-                #{code.indent(6)}
+          context 'and helpers_code is not blank' do
+            let(:helpers_code) { "module Helpers\nend" }
+
+            it 'defines correct transform method for each item' do
+              transforms_code.each do |name, code|
+                is_expected.to include <<~EOF.indent(2)
+                  def #{name}(node, opts = {})
+                    node.extend(Helpers)
+                    node.instance_eval do
+                      converter.set_local_variables(binding, opts) unless opts.empty?
+                  #{code.indent(6)}
+                    end
                   end
-                end
-              EOF
+                EOF
+              end
+            end
+          end
+
+          context 'and helpers_code is blank' do
+            it 'does not extend node with Helpers in transform methods' do
+              transforms_code.each do |name, _|
+                is_expected.to_not match(/def #{name}\([^)]*\).*?\.extend\(Helpers\).*?\bend\b/m)
+              end
             end
           end
         end
