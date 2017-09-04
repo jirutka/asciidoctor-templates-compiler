@@ -194,19 +194,18 @@ module Asciidoctor::TemplatesCompiler
             end
           end
 
-          context 'is array of strings' do
-            let(:register_for) { ['html5s', 'html5'] }
+          [#|register_for       | expected           | desc              |#
+            [['html5s', 'html5'], '"html5s", "html5"', 'array of strings'],
+            [[:html5s, :html5]  , ':html5s, :html5'  , 'array of symbols'],
+            ['html5s'           , '"html5s"'         , 'a string'],
+            [:html5             , ':html5'           , 'a symbol'],
+          ].each do |register_for, expected, desc|
+            context "is #{desc}" do
+              let(:register_for) { register_for }
 
-            it 'calls `register_for "item1", "item2"`' do
-              is_expected.to include %(register_for "html5s", "html5"\n)
-            end
-          end
-
-          context 'is array of symbols' do
-            let(:register_for) { [:html5s, :html5] }
-
-            it 'calls `register_for :item1, :item2`' do
-              is_expected.to include %(register_for :html5s, :html5\n)
+              it 'calls "register_for" with given arguments' do
+                is_expected.to include %(register_for #{expected}\n)
+              end
             end
           end
         end

@@ -21,7 +21,7 @@ module Asciidoctor::TemplatesCompiler
       @class_name = class_name
       @transforms_code = transforms_code
       @helpers_code = helpers_code
-      @register_for = register_for
+      @register_for = Array(register_for)
       @backend_info = backend_info
       @delegate_backend = delegate_backend
     end

@@ -9,10 +9,22 @@ Layout/EmptyLines:
 Layout/EmptyLinesAroundBlockBody:
   Enabled: false
 
+Layout/LeadingCommentSpace:
+  Enabled: false
+
 Layout/MultilineBlockLayout:
   Enabled: false
 
+Layout/SpaceBeforeComma:
+  Enabled: false
+
+Layout/SpaceBeforeComment:
+  Enabled: false
+
 Layout/SpaceInsideBlockBraces:
+  Enabled: false
+
+Layout/SpaceInsideBrackets:
   Enabled: false
 
 Layout/SpaceInsideParens:
