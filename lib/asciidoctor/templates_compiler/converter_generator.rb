@@ -24,6 +24,10 @@ module Asciidoctor::TemplatesCompiler
       @register_for = Array(register_for)
       @backend_info = backend_info
       @delegate_backend = delegate_backend
+
+      if !helpers_code.blank? && helpers_code !~ /\bmodule Helpers[\s#]/
+        raise ArgumentError, 'The helpers_code does not contain module Helpers'
+      end
     end
 
     def generate(out = StringIO.new)

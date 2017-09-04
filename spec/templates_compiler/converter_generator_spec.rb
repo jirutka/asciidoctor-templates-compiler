@@ -50,6 +50,14 @@ module Asciidoctor::TemplatesCompiler
 
     describe '#initialize' do
       include_examples :unknown_keyword_arg, :new
+
+      context 'with helpers_code w/o module Helpers' do
+        let(:helpers_code) { 'def foo; end' }
+
+        it 'raises ArgumentError' do
+          expect { instance }.to raise_error ArgumentError
+        end
+      end
     end
 
 

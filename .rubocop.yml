@@ -48,6 +48,10 @@ Style/FileName:
   Exclude:
     - 'lib/asciidoctor-templates-compiler.rb'
 
+# I don't use guard clause when line would be too long.
+Style/GuardClause:
+  Enabled: false
+
 Style/HashSyntax:
   Exclude:
     - Rakefile
