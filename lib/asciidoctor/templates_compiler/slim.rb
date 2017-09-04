@@ -10,7 +10,6 @@ require 'slim/include'
 
 module Asciidoctor::TemplatesCompiler
   class Slim < Base
-    using Corefines::Object::then
 
     DEFAULT_ENGINE_OPTS =
       ::Asciidoctor::Converter::TemplateConverter::DEFAULT_ENGINE_OPTIONS[:slim].dup.freeze
@@ -38,7 +37,7 @@ module Asciidoctor::TemplatesCompiler
     end
 
     def read_helpers(templates_dir)
-      super.then { |s| s.sub('module Slim::Helpers', 'module Helpers') }
+      super.sub('module Slim::Helpers', 'module Helpers')
     end
   end
 end

@@ -57,7 +57,7 @@ module Asciidoctor::TemplatesCompiler
 
     def read_helpers(templates_dir)
       path = File.join(templates_dir, 'helpers.rb')
-      IO.read(path) if File.exist? path
+      File.exist?(path) ? IO.read(path) : ''
     end
 
     def transform_name_from_tmpl_name(filename)

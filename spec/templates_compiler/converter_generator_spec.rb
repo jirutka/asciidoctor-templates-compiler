@@ -157,13 +157,17 @@ module Asciidoctor::TemplatesCompiler
           EOF
           end
 
-          context 'is nil' do
-            it "does not include code for copying Helper's constants into converter class" do
-              is_expected.to_not include copy_helpers_constants
+          [nil, ''].each do |value|
+            context "is #{value.inspect}" do
+              let(:helpers_code) { value }
+
+              it "does not include code for copying Helper's constants into converter class" do
+                is_expected.to_not include copy_helpers_constants
+              end
             end
           end
 
-          context 'is not nil' do
+          context 'is non-blank string' do
             let(:helpers_code) do <<~EOF
               module Helpers
                 def help_me

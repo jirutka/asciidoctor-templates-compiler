@@ -6,6 +6,7 @@ require 'stringio'
 module Asciidoctor::TemplatesCompiler
   class ConverterGenerator
     using Corefines::String::indent
+    using Corefines::Object::blank?
 
     class << self
       def generate(output: StringIO.new, **opts)
@@ -27,7 +28,7 @@ module Asciidoctor::TemplatesCompiler
 
     def generate(out = StringIO.new)
       out << head_code << "\n"
-      out << helpers_code << "\n" if @helpers_code
+      out << helpers_code << "\n" unless @helpers_code.blank?
       out << initialization_code << "\n"
       out << convert_method_code << "\n"
       transform_methods_code(out)
