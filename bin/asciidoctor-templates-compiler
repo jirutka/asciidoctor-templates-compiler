@@ -1,0 +1,109 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+require 'asciidoctor/templates_compiler'
+require 'docopt'
+require 'corefines'
+
+using Corefines::Hash::rekey
+
+PROG_NAME = 'asciidoctor-templates-compiler'
+BUGS_URL = "https://github.com/jirutka/#{PROG_NAME}/issues"
+
+HELP_MSG = <<~EOF
+  Usage:
+    #{PROG_NAME} [options...] TEMPLATES_DIR
+    #{PROG_NAME} --help | --version
+
+  Arguments:
+    TEMPLATES_DIR                    Path of the directory where to look for templates ("*.slim"
+                                     files not starting with "_", in the case of Slim) and
+                                     (optional) "helpers.rb".
+
+  Options:
+    -b --backend-info KEY=VAL[,...]  Parameters for backend_info: basebackend, outfilesuffix,
+                                     filetype, and htmlsyntax.
+
+    -n --class-name NAME             Full name of the converter class to generate (e.g.
+                                     My::HTML::Converter) [default: Converter].
+
+    -d --delegate-backend BACKEND    Name of the backend (converter) to use as a fallback for AST
+                                     nodes not supported by your converter. If not specified
+                                     (default), no fallback will be used and converter will raise
+                                     "NoMethodError" when it try to convert an unsupported node.
+
+    -o --output FILE                 Where to write the output. Use "-" for stdout. [default: -]
+
+    -P --no-pretty                   Do not format generated Ruby code.
+
+    -r --register-for BACKEND[,...]  Backend name(s) that the generated converter should be
+                                     registered in Asciidoctor to handle.
+
+    -V --version                     Print version and exit.
+
+    -h --help                        Show this message and exit.
+
+  Please report bugs at <#{BUGS_URL}>.
+EOF
+
+def die(message, status: 1)
+  $stderr.puts("#{PROG_NAME}: #{message}")
+  exit status
+end
+
+def parse_kw_list(list)
+  list
+    .flat_map { |arg| arg.split(/\s*,\s*/) }
+    .map { |item| item.split('=', 2) }
+    .to_h
+rescue ArgumentError
+  raise ArgumentError, 'not a list of key=word arguments'
+end
+
+def parse_option_value(name, value)
+  case name
+  when :backend_info
+    parse_kw_list(value)
+  when :class_name, :delegate_backend, :output
+    value.last
+  when :pretty
+    value.zero?
+  else
+    value
+  end
+rescue ArgumentError => e
+  raise ArgumentError, "Invalid option --#{name}: #{e.message}"
+end
+
+opts = begin
+  Docopt::docopt(HELP_MSG, help: false)
+    .rekey { |key| key.sub(/^--/, '').tr('-', '_').downcase.to_sym }
+    .rekey(:no_pretty => :pretty)  # rubocop:disable Style/HashSyntax
+    .map { |k, v| [k, parse_option_value(k, v)] }.to_h
+rescue Docopt::Exit => e
+  $stderr.puts(e.message)
+  exit 1
+rescue ArgumentError => e
+  die e.message
+end
+
+if opts[:help]
+  puts HELP_MSG.strip
+
+elsif opts[:version]
+  puts [PROG_NAME, Asciidoctor::TemplatesCompiler::VERSION].join(' ')
+
+else
+  output = if opts[:output] == '-'
+    $stdout
+  else
+    File.open(opts[:output], 'w')
+  end
+
+  begin
+    Asciidoctor::TemplatesCompiler::Slim.compile_converter(**opts, output: output)
+  rescue RuntimeError => e
+    die e.message
+  ensure
+    output.close if output != $stdout
+  end
+end

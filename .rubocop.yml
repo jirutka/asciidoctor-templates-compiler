@@ -34,6 +34,9 @@ Metrics/MethodLength:
 Metrics/ParameterLists:
   CountKeywordArgs: false
 
+Style/BlockDelimiters:
+  EnforcedStyle: braces_for_chaining
+
 Style/ClassAndModuleChildren:
   Enabled: false
 
@@ -61,6 +64,9 @@ Style/FrozenStringLiteralComment:
     - Gemfile*
     - Rakefile
     - '*.gemspec'
+
+Style/MultilineBlockChain:
+  Enabled: false
 
 Style/NegatedIf:
   Enabled: false

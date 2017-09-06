@@ -11,11 +11,13 @@ Gem::Specification.new do |s|
   s.summary  = 'Compile templates-based Asciidoctor converter (backend) into a single Ruby file'
 
   s.files    = Dir['lib/**/*', '*.gemspec', 'LICENSE*', 'README*']
+  s.executables = Dir['bin/*'].map { |f| File.basename(f) }
 
   s.required_ruby_version = '>= 2.3'
 
   s.add_runtime_dependency 'asciidoctor', '~> 1.5'
   s.add_runtime_dependency 'corefines', '~> 1.2'
+  s.add_runtime_dependency 'docopt', '~> 0.6'
   s.add_runtime_dependency 'slim', '>= 2.1', '< 4.0'
   s.add_runtime_dependency 'ruby-beautify', '~> 0.97'
 
