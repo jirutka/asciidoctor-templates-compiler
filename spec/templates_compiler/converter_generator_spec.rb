@@ -1,9 +1,10 @@
 require 'asciidoctor/templates_compiler/converter_generator'
 require 'corefines'
 
-using Corefines::String::indent
-
 module Asciidoctor::TemplatesCompiler
+  using Corefines::String[:indent, :unindent]
+  using StringExt::reindent
+
   describe ConverterGenerator do
 
     subject(:instance) do
@@ -94,7 +95,7 @@ module Asciidoctor::TemplatesCompiler
         end
 
         it 'defines method #set_local_variables' do
-          is_expected.to include <<~EOF.indent(2)
+          is_expected.to include <<-EOF.reindent(2)
             def set_local_variables(binding, vars)
               vars.each do |key, val|
                 binding.local_variable_set(key.to_sym, val)
@@ -146,12 +147,12 @@ module Asciidoctor::TemplatesCompiler
 
             it 'defines correct transform method for each item' do
               transforms_code.each do |name, code|
-                is_expected.to include <<~EOF.indent(2)
+                is_expected.to include <<-EOF.unindent.%(code.indent(4)).indent(2)
                   def #{name}(node, opts = {})
                     node.extend(Helpers)
                     node.instance_eval do
                       converter.set_local_variables(binding, opts) unless opts.empty?
-                  #{code.indent(6)}
+                  %s
                     end
                   end
                 EOF
@@ -169,7 +170,7 @@ module Asciidoctor::TemplatesCompiler
         end
 
         context 'when helpers_code' do
-          let(:copy_helpers_constants) do <<~EOF.indent(2)
+          let(:copy_helpers_constants) do <<-EOF.reindent(2)
             # Make Helpers' constants accessible from transform methods.
             Helpers.constants.each do |const|
               const_set(const, Helpers.const_get(const))
@@ -188,7 +189,7 @@ module Asciidoctor::TemplatesCompiler
           end
 
           context 'is non-blank string' do
-            let(:helpers_code) do <<~EOF
+            let(:helpers_code) do <<-EOF.unindent
               module Helpers
                 def help_me
                   puts 'ok'
@@ -233,7 +234,7 @@ module Asciidoctor::TemplatesCompiler
         context 'when backend_info' do
           context 'is empty' do
             it 'no backend_info parameters are set in constructor' do
-              is_expected.to include <<~EOF.indent(2)
+              is_expected.to include <<-EOF.reindent(2)
                 def initialize(backend, opts = {})
                   super
                 end
@@ -245,7 +246,7 @@ module Asciidoctor::TemplatesCompiler
             let(:backend_info) {{ basebackend: 'docbook', outfilesuffix: '.xml' }}
 
             it 'backend_info parameters are set in constructor' do
-              is_expected.to include <<~EOF.indent(2)
+              is_expected.to include <<-EOF.reindent(2)
                 def initialize(backend, opts = {})
                   super
                   basebackend "docbook"
@@ -258,7 +259,7 @@ module Asciidoctor::TemplatesCompiler
 
         context 'when delegate_backend' do
 
-          let(:convert_method_code) do <<~EOF.indent(2)
+          let(:convert_method_code) do <<-EOF.reindent(2)
             def convert(node, transform = nil, opts = {})
               transform ||= node.node_name
               converter = %s
@@ -286,7 +287,7 @@ module Asciidoctor::TemplatesCompiler
             let(:delegate_backend) { 'html5' }
 
             it 'defines @delegate_converter in constructor' do
-              is_expected.to include <<~EOF.indent(2)
+              is_expected.to include <<-EOF.reindent(2)
                 def initialize(backend, opts = {})
                   super
 

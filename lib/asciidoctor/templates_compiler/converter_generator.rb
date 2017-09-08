@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 require 'asciidoctor/templates_compiler/version'
+require 'asciidoctor/templates_compiler/string_ext'
 require 'corefines'
 require 'stringio'
 
 module Asciidoctor::TemplatesCompiler
   class ConverterGenerator
-    using Corefines::String::indent
+    using Corefines::String[:indent, :unindent]
     using Corefines::Object::blank?
+    using StringExt::reindent
 
     class << self
       def generate(output: StringIO.new, **opts)
@@ -52,7 +54,7 @@ module Asciidoctor::TemplatesCompiler
         .tap { |ary| ary.push('end ' * ary.size) }
         .join(' ').strip
 
-      <<~EOF
+      <<-EOF.unindent
         # This file has been generated!
 
         #{init_modules}
@@ -61,9 +63,9 @@ module Asciidoctor::TemplatesCompiler
     end
 
     def helpers_code
-      <<~EOF.indent(2, ' ')
+      <<-EOF.unindent.%(@helpers_code).indent(2)
         #{separator 'Begin of Helpers'}
-        #{@helpers_code}
+        %s
 
         # Make Helpers' constants accessible from transform methods.
         Helpers.constants.each do |const|
@@ -84,7 +86,7 @@ module Asciidoctor::TemplatesCompiler
       end
 
       if @delegate_backend
-        delegate_converter = <<~EOF.rstrip.indent(2, ' ')
+        delegate_converter = <<-EOF.reindent(2).rstrip
 
           delegate_backend = (opts[:delegate_backend] || #{@delegate_backend.inspect}).to_s
           factory = ::Asciidoctor::Converter::Factory
@@ -106,7 +108,7 @@ module Asciidoctor::TemplatesCompiler
         delegate_converter,
         'end',
         '',
-      ].compact.join("\n").indent(2, ' ')
+      ].compact.join("\n").indent(2)
     end
 
     def convert_method_code
@@ -116,7 +118,7 @@ module Asciidoctor::TemplatesCompiler
         'self'
       end
 
-      <<~EOF.indent(2, ' ')
+      <<-EOF.reindent(2)
         def convert(node, transform = nil, opts = {})
           transform ||= node.node_name
           converter = #{converter}
@@ -131,7 +133,7 @@ module Asciidoctor::TemplatesCompiler
     end
 
     def support_methods_code
-      <<~EOF.indent(2, ' ')
+      <<-EOF.reindent(2)
         def set_local_variables(binding, vars)
           vars.each do |key, val|
             binding.local_variable_set(key.to_sym, val)
@@ -141,19 +143,17 @@ module Asciidoctor::TemplatesCompiler
     end
 
     def transform_methods_code(out)
-      out << "  #{separator 'Begin of generated transformation methods'}"
+      out << "  #{separator 'Begin of generated transformation methods'}\n"
 
       @transforms_code.each do |name, code|
-        out << <<~EOF.indent(2, ' ')
-
-          def #{name}(node, opts = {})
-          #{'  node.extend(Helpers)' unless @helpers_code.blank?}
-            node.instance_eval do
-              converter.set_local_variables(binding, opts) unless opts.empty?
-          #{code.indent(6, ' ')}
-            end
-          end
-        EOF
+        out << "\n"
+        out << "  def #{name}(node, opts = {})\n"
+        out << "    node.extend(Helpers)\n" unless @helpers_code.blank?
+        out << "    node.instance_eval do\n"
+        out << "      converter.set_local_variables(binding, opts) unless opts.empty?\n"
+        out << code.indent(6, ' ') << "\n"
+        out << "    end\n"
+        out << "  end\n"
       end
 
       out << "  #{separator 'End of generated transformation methods'}\n"

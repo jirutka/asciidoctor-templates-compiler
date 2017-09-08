@@ -5,11 +5,12 @@ require 'docopt'
 require 'corefines'
 
 using Corefines::Hash::rekey
+using Corefines::String::unindent
 
 PROG_NAME = 'asciidoctor-templates-compiler'
 BUGS_URL = "https://github.com/jirutka/#{PROG_NAME}/issues"
 
-HELP_MSG = <<~EOF
+HELP_MSG = <<-EOF.unindent
   Usage:
     #{PROG_NAME} [options...] TEMPLATES_DIR
     #{PROG_NAME} --help | --version

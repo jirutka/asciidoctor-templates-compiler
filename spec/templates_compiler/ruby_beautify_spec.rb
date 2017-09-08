@@ -1,9 +1,9 @@
 require 'asciidoctor/templates_compiler/ruby_beautify'
 require 'corefines'
 
-using Corefines::String::indent
-
 module Asciidoctor::TemplatesCompiler
+  using Corefines::String::unindent
+
   describe RubyBeautify do
     include described_class
 
@@ -18,14 +18,14 @@ module Asciidoctor::TemplatesCompiler
     describe '.pretty_string' do
 
       it 'indents code without semicolons' do
-        expect( pretty_string <<~EOF
+        expect( pretty_string <<-EOF.unindent
           class Foo
           def hi
           puts "Hello!"
           end
           end
         EOF
-        ).to eq <<~EOF
+        ).to eq <<-EOF.unindent
           class Foo
             def hi
               puts "Hello!"
@@ -47,11 +47,11 @@ module Asciidoctor::TemplatesCompiler
       end
 
       it 'replaces in-between semicolons with newlines and indents' do
-        expect( pretty_string <<~EOF
+        expect( pretty_string <<-EOF.unindent
           _buf = ''; if true
           _buf << '<kbd>'; else; _buf << '<kbd id="key">'; end; _buf
         EOF
-        ).to eq <<~EOF
+        ).to eq <<-EOF.unindent
           _buf = ''
           if true
             _buf << '<kbd>'
