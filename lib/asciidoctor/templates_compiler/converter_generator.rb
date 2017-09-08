@@ -5,19 +5,44 @@ require 'corefines'
 require 'stringio'
 
 module Asciidoctor::TemplatesCompiler
+  ##
+  # Source-code generator of Asciidoctor converter classes.
   class ConverterGenerator
     using Corefines::String[:indent, :unindent]
     using Corefines::Object::blank?
     using StringExt::reindent
 
     class << self
+      ##
+      # (see #initialize)
+      # @param output [#<<] output stream where to write the generated class.
+      #   Defaults to {StringIO}.
+      # @return the given _output_ stream.
+      #
       def generate(output: StringIO.new, **opts)
         new(**opts).call(output)
       end
 
+      # An alias for {.generate}.
       alias call generate
     end
 
+    ##
+    # @param class_name [String] full name of the converter class to generate
+    #   (e.g. +My::HTML::Converter+).
+    # @param transforms_code [#each] enumerable that yields pair: transform name ()
+    # @param helpers_code [String, nil] source code to include in the generated class. It must
+    #   contain a module named +Helpers+.
+    # @param register_for [Array<String>] an array of backend names that the generated converter
+    #   should be registered for to handle. Default is empty.
+    # @param backend_info [Hash] a hash of parameters for +backend_info+: +basebackend+,
+    #   +outfilesuffix+, +filetype+, +htmlsyntax+. Default is empty.
+    # @param delegate_backend [String, nil] name of the backend (converter) to use as a fallback
+    #   for AST nodes not supported by the generated converter. If not specified, no fallback will
+    #   be used and converter will raise +NoMethodError+ when it try to convert unsupported node.
+    #
+    # @raise [ArgumentError] if _helpers_code_ is not blank and does not contain module +Helpers+.
+    #
     def initialize(class_name:, transforms_code:, helpers_code: nil,
                    register_for: [], backend_info: {}, delegate_backend: nil, **)
       @class_name = class_name
@@ -32,6 +57,12 @@ module Asciidoctor::TemplatesCompiler
       end
     end
 
+    ##
+    # Generates source code of a converter class for Asciidoctor.
+    #
+    # @param out [#<<] output stream where to write the generated class.
+    # @return the given _out_ stream.
+    #
     def generate(out = StringIO.new)
       out << head_code << "\n"
       out << helpers_code << "\n" unless @helpers_code.blank?
