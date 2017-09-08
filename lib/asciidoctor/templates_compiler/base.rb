@@ -5,8 +5,12 @@ require 'asciidoctor/templates_compiler/ruby_beautify'
 require 'stringio'
 
 module Asciidoctor::TemplatesCompiler
+  ##
+  # Base class for templates compilers.
   class Base
     class << self
+      ##
+      # An "alias" for {#compile_converter}.
       def compile_converter(**opts)
         new.compile_converter(**opts)
       end
@@ -14,6 +18,20 @@ module Asciidoctor::TemplatesCompiler
       alias call compile_converter
     end
 
+    ##
+    # (see ConverterGenerator.generate)
+    #
+    # Compiles templates found in _templates_dir_ to Ruby and generates an Asciidoctor converter
+    # class from them.
+    #
+    # @param templates_dir [String] path of the directory where to look for templates
+    #   and (optional) +helpers.rb+.
+    # @param engine_opts [Hash] a hash of options to pass into the templating engine.
+    #   Default is empty.
+    # @param pretty [Boolean] enable pretty-formatting of the generated Ruby code?
+    #
+    # @raise [ArgumentError] if the given _templates_dir_ does not exist.
+    #
     def compile_converter(templates_dir:, engine_opts: {}, pretty: false, **opts)
       unless Dir.exist? templates_dir
         raise ArgumentError, "Templates directory '#{templates_dir}' does not exist"
@@ -30,11 +48,20 @@ module Asciidoctor::TemplatesCompiler
 
     protected
 
+    ##
     # @abstract
+    # @param filename [String] path of the template file to compile.
+    # @param engine_opts [Hash] a hash of options to pass into the templating engine.
+    # @return [String] a Ruby code of the compiled template.
+    #
     def compile_template(filename, engine_opts = {})
     end
 
+    ##
     # @abstract
+    # @param dirname [String] path of the directory where to look for templates.
+    # @return [Array<String>] paths of the found template files.
+    #
     def find_templates(dirname)
     end
 
