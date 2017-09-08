@@ -16,7 +16,7 @@ module Asciidoctor::TemplatesCompiler
 
     def compile_converter(templates_dir:, engine_opts: {}, pretty: false, **opts)
       unless Dir.exist? templates_dir
-        raise "Templates directory '#{templates_dir}' does not exist"
+        raise ArgumentError, "Templates directory '#{templates_dir}' does not exist"
       end
 
       templates = find_templates(templates_dir)
