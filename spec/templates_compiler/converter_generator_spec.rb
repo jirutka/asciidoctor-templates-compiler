@@ -255,6 +255,19 @@ module Asciidoctor::TemplatesCompiler
               EOF
             end
           end
+
+          context 'sets boolean parameters' do
+            let(:backend_info) {{ supports_templates: true }}
+
+            it 'backend_info parameters are set without a value' do
+              is_expected.to include <<-EOF.reindent(2)
+                def initialize(backend, opts = {})
+                  super
+                  supports_templates
+                end
+              EOF
+            end
+          end
         end
 
         context 'when delegate_backend' do

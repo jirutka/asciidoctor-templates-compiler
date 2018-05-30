@@ -36,7 +36,7 @@ module Asciidoctor::TemplatesCompiler
     # @param register_for [Array<String>] an array of backend names that the generated converter
     #   should be registered for to handle. Default is empty.
     # @param backend_info [Hash] a hash of parameters for +backend_info+: +basebackend+,
-    #   +outfilesuffix+, +filetype+, +htmlsyntax+. Default is empty.
+    #   +outfilesuffix+, +filetype+, +htmlsyntax+, +supports_templates+. Default is empty.
     # @param delegate_backend [String, nil] name of the backend (converter) to use as a fallback
     #   for AST nodes not supported by the generated converter. If not specified, no fallback will
     #   be used and converter will raise +NoMethodError+ when it try to convert unsupported node.
@@ -109,7 +109,9 @@ module Asciidoctor::TemplatesCompiler
 
     def initialization_code
       setup_backend_info = if !@backend_info.empty?
-        @backend_info.map { |k, v| "  #{k} #{v.inspect}" }.join("\n")
+        @backend_info.map { |key, value|
+          "  #{key}" + (value == true ? '' : " #{value.inspect}")
+        }.join("\n")
       end
 
       if !@register_for.empty?
