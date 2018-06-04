@@ -1,5 +1,6 @@
 require 'rspec'
 require_relative 'support/matchers'
+require 'asciidoctor/logging'
 
 RSpec.configure do |config|
   config.color = true
