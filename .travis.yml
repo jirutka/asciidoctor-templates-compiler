@@ -2,6 +2,7 @@ dist: trusty
 sudo: false
 language: ruby
 rvm:
+  - 2.5
   - 2.4
   - 2.3
   - 2.2
@@ -24,5 +25,5 @@ deploy:
   api_key:
     secure: "CzuNFI2TO4Biq3QWiruJHVrexEtzDNbZDDtY3tA4DY12ATmQCtH4jBKIoSZxos3Bca+ZhjH7puOwWBwUf8wLyGtuWe2KmQQd48IWd0G3mmRexMeNDwbR+D8NpeYrJRtz0E/SEn02lCV5rm0MWqEf6tI23v0HB69CQSAN8b7JMtBOrodhk8fJh6yqbmzDHiiKS79Y7pfj3BaFoml56uPyNl5qO1qwnPM2JnKNEazbXq3F4meY7XLKJVR+Koz6Ia1wZRq67CmTAA39oqzcQSlvvosxXGKs/3Hozvnr83pYn/OTgUKS1Dj0JEpK9eo0zxUlW8nya/75RrCgyrfmMB7T6p5hWHJHMv06WUDxbQDMSkB45N94hX0dl6V5DZJgemNDAD3fkttfnq1L7j2g2oA+y8zsa/aWP9epAfIMMMBJCBBcS3k2x6Qwf6B4Ni9wx+vcvfujHLesdCvnpMqjZAnOsXYeUvB1gG7PahcLz3h0L54Df5tdrrjSPIAEO7oLCL5xPA6hG04tQdyeIk6TtWpLlpMN+73zOn+cQxOjHcYhPh78DqQ5eeWRDsrNNCFcaMOo1xK3XNIiRnX/qdMdHFWOB9Cr0J9jIXJg0cIAsGSZsXTAklPnDZYFAjKzyS4iswQE72gs6bG8hWpUutgCh4v47MZGTUcCDfbKfEOrODaPbx4="
   on:
-    rvm: 2.4
+    rvm: 2.5
     tags: true
