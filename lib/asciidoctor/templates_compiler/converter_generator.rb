@@ -110,7 +110,7 @@ module Asciidoctor::TemplatesCompiler
     def initialization_code
       setup_backend_info = if !@backend_info.empty?
         @backend_info.map { |key, value|
-          "  #{key}" + (value == true ? '' : " #{value.inspect}")
+          "  #{key}" + (value == true ? '' : " #{value.inspect}") + " if respond_to? :#{key}"
         }.join("\n")
       end
 

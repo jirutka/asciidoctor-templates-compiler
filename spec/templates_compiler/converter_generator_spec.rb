@@ -249,8 +249,8 @@ module Asciidoctor::TemplatesCompiler
               is_expected.to include <<-EOF.reindent(2)
                 def initialize(backend, opts = {})
                   super
-                  basebackend "docbook"
-                  outfilesuffix ".xml"
+                  basebackend "docbook" if respond_to? :basebackend
+                  outfilesuffix ".xml" if respond_to? :outfilesuffix
                 end
               EOF
             end
@@ -263,7 +263,7 @@ module Asciidoctor::TemplatesCompiler
               is_expected.to include <<-EOF.reindent(2)
                 def initialize(backend, opts = {})
                   super
-                  supports_templates
+                  supports_templates if respond_to? :supports_templates
                 end
               EOF
             end

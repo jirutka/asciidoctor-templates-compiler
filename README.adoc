@@ -44,7 +44,7 @@ $ bundle install
 The main entry point is method `Asciidoctor::TemplatesCompiler::Slim#compile_converter` (for Slim) that accepts the following keyword arguments.
 
 backend_info::
-  A hash of keys for `backend_info`: `basebackend`, `outfilesuffix`, `filetype`, `htmlsyntax`, `supports_templates` (requires Asciidoctor ≥ 1.5.7).
+  A hash of keys for `backend_info`: `basebackend`, `outfilesuffix`, `filetype`, `htmlsyntax`, `supports_templates` (supported since Asciidoctor ≥ 1.5.7).
 
 class_name::
   Full name of the converter class to generate (e.g. `My::HTML::Converter`).
