@@ -40,17 +40,21 @@ module Asciidoctor::TemplatesCompiler
     # @param delegate_backend [String, nil] name of the backend (converter) to use as a fallback
     #   for AST nodes not supported by the generated converter. If not specified, no fallback will
     #   be used and converter will raise +NoMethodError+ when it try to convert unsupported node.
+    # @param ignore_convert_opts [Boolean] ignore (i.e. do not set as local variables) options
+    #   passed to the +#convert+ method (i.e. to the templates). This is needed only for Opal.
     #
     # @raise [ArgumentError] if _helpers_code_ is not blank and does not contain module +Helpers+.
     #
     def initialize(class_name:, transforms_code:, helpers_code: nil,
-                   register_for: [], backend_info: {}, delegate_backend: nil, **)
+                   register_for: [], backend_info: {}, delegate_backend: nil,
+                   ignore_convert_opts: false, **)
       @class_name = class_name
       @transforms_code = transforms_code
       @helpers_code = helpers_code
       @register_for = Array(register_for)
       @backend_info = backend_info
       @delegate_backend = delegate_backend
+      @ignore_convert_opts = ignore_convert_opts
 
       if !helpers_code.blank? && helpers_code !~ /\bmodule Helpers[\s#]/
         raise ArgumentError, 'The helpers_code does not contain module Helpers'
@@ -166,6 +170,8 @@ module Asciidoctor::TemplatesCompiler
     end
 
     def support_methods_code
+      return '' if @ignore_convert_opts
+
       <<-EOF.reindent(2)
         def set_local_variables(binding, vars)
           vars.each do |key, val|
@@ -183,7 +189,7 @@ module Asciidoctor::TemplatesCompiler
         out << "  def #{name}(node, opts = {})\n"
         out << "    node.extend(Helpers)\n" unless @helpers_code.blank?
         out << "    node.instance_eval do\n"
-        out << "      converter.set_local_variables(binding, opts) unless opts.empty?\n"
+        out << "      converter.set_local_variables(binding, opts) unless opts.empty?\n" unless @ignore_convert_opts  # rubocop:disable LineLength
         out << code.indent(6, ' ') << "\n"
         out << "    end\n"
         out << "  end\n"

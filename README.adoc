@@ -57,6 +57,10 @@ delegate_backend::
 engine_opts::
   A Hash of options to pass into the templating engine that compiles templates into Ruby code.
 
+ignore_convert_opts::
+  Ignore (i.e. do not set as local variables) options passed to the `#convert` method (i.e. to the templates).
+  This is needed only for Opal.
+
 output::
   An output stream (`IO` object like opened file, `$stdout`, …) to write the generated converter into.
   Default is `StringIO.new` (it’s the return value of `#compile_converter`).
@@ -150,6 +154,46 @@ end
 ----
 
 You can also look into https://github.com/jirutka/asciidoctor-html5s/[asciidoctor-html5s] for a real-world example including integration with https://github.com/asciidoctor/asciidoctor-doctest/[Asciidoctor::DocTest].
+
+
+=== Opal Caveats
+
+The generated converter code can be transpiled into JavaScript using Opal.
+However, there’s one feature that is known to not work: passing options to the `#convert` method.
+
+Consider the following example:
+
+[source, slim]
+.toc.html.slim:
+nav id='toc'
+  = converter.convert document, 'outline', toclevels: 5
+
+[source, slim]
+.outline.html.slim:
+- toclevels ||= document.attr('toclevels').to_i
+
+Variable `toclevels` in `outline.html.slim` should be initialized to `5` when this template is called from the `toc.html.slim` template.
+This is implemented using `Kernel#binding` and `Binding#local_variable_set` which is not supported by Opal.
+In such case you get exception like this:
+
+....
+RuntimeError: node_modules/opal-runtime/src/opal.js
+         throw exception;
+         ^
+
+binding: undefined method `binding` for [some Asciidoctor class]
+....
+
+Unfortunately I don’t know how to implement this feature without using `Binding`, but you can use the following workaround.
+
+Enable `ignore_convert_opts` (see <<Usage>>) to remove the code calling `Kernel#binding` from the converter.
+The options will be still passed, but not binded to the template local variables.
+If you examine the generated code, you can see that the options are passed to the convert methods via argument named `opts`.
+You can exploit this fact and do something like:
+
+[source, slim]
+.outline.html.slim:
+- toclevels = opts[:toclevels] || document.attr('toclevels').to_i
 
 
 == License

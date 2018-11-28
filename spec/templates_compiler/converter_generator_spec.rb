@@ -15,6 +15,7 @@ module Asciidoctor::TemplatesCompiler
         register_for: register_for,
         backend_info: backend_info,
         delegate_backend: delegate_backend,
+        ignore_convert_opts: ignore_convert_opts,
       )
     end
 
@@ -24,6 +25,7 @@ module Asciidoctor::TemplatesCompiler
     let(:register_for) { [] }
     let(:backend_info) { {} }
     let(:delegate_backend) { nil }
+    let(:ignore_convert_opts) { false }
 
 
     shared_examples :unknown_keyword_arg do |meth|
@@ -321,6 +323,14 @@ module Asciidoctor::TemplatesCompiler
               is_expected.to include \
                 convert_method_code % 'respond_to?(transform) ? self : @delegate_converter'
             end
+          end
+        end
+
+        context 'when ignore_convert_opts is true' do
+          let(:ignore_convert_opts) { true }
+
+          it 'does not include set_local_variables' do
+            is_expected.to_not match(/\bset_local_variables\b/)
           end
         end
       end
