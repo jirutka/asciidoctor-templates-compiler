@@ -72,6 +72,7 @@ module Asciidoctor::TemplatesCompiler
       out << helpers_code << "\n" unless @helpers_code.blank?
       out << initialization_code << "\n"
       out << convert_method_code << "\n"
+      out << handles_method_code << "\n"
       transform_methods_code(out)
       out << support_methods_code << "\n"
       out << tail_code
@@ -165,6 +166,15 @@ module Asciidoctor::TemplatesCompiler
           else
             converter.send(transform, node, opts)
           end
+        end
+      EOF
+    end
+
+    # This is for compatibility with Asciidoctor >=2.0.0 (see #5).
+    def handles_method_code
+      <<-EOF.reindent(2)
+        def handles?(transform)
+          respond_to?("convert_\#{transform}") || respond_to?(transform)
         end
       EOF
     end

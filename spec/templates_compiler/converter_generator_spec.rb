@@ -106,6 +106,14 @@ module Asciidoctor::TemplatesCompiler
           EOF
         end
 
+        it 'defines method handles?' do
+          is_expected.to include <<-EOF.reindent(2)
+            def handles?(transform)
+              respond_to?("convert_\#{transform}") || respond_to?(transform)
+            end
+          EOF
+        end
+
         context 'when class_name' do
           shared_examples :converter_class do
             it 'declares converter class extending ::Asciidoctor::Converter::Base' do
@@ -143,6 +151,18 @@ module Asciidoctor::TemplatesCompiler
             document: %(s = ""\ns << "<document>"),
             inline_image: '"<inline_image>"',
           }}
+
+          it 'returns true when the converter handles a transformation' do
+            eval(output)  # rubocop:disable Security/Eval
+            my_converter = MyConverter.new('test')
+
+            expect( my_converter.handles?('document') ).to eq true
+            expect( my_converter.handles?('inline_image') ).to eq true
+            expect( my_converter.handles?('paragraph') ).to eq false
+
+            # cleanup
+            Asciidoctor::TemplatesCompiler.send(:remove_const, :MyConverter)
+          end
 
           context 'and helpers_code is not blank' do
             let(:helpers_code) { "module Helpers\nend" }
