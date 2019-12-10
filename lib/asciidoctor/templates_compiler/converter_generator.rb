@@ -159,6 +159,7 @@ module Asciidoctor::TemplatesCompiler
       <<-EOF.reindent(2)
         def convert(node, transform = nil, opts = {})
           transform ||= node.node_name
+          opts ||= {}
           converter = #{converter}
 
           if opts.empty?

@@ -297,6 +297,7 @@ module Asciidoctor::TemplatesCompiler
           let(:convert_method_code) do <<-EOF.reindent(2)
             def convert(node, transform = nil, opts = {})
               transform ||= node.node_name
+              opts ||= {}
               converter = %s
 
               if opts.empty?
