@@ -29,17 +29,5 @@ module Asciidoctor::TemplatesCompiler
     end
 
     alias call pretty_string
-
-    # XXX: Remove after https://github.com/erniebrodeur/ruby-beautify/pull/43 is merged.
-    # Overwrite this method from ::RubyBeautify with implementation that does
-    # not execute ruby subprocess.
-    def syntax_ok?(string)
-      catch :good do
-        eval "BEGIN { throw :good }; #{string}"  # rubocop:disable Security/Eval
-      end
-      true
-    rescue SyntaxError
-      false
-    end
   end
 end
