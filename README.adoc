@@ -16,8 +16,6 @@ endif::env-github[]
 
 This tool allows to precompile Slim templates into Ruby code and assemble them into a single-file pure Ruby converter (backend).
 
-TODO
-
 
 == Installation
 
