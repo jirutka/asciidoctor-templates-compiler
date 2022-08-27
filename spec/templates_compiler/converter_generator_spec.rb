@@ -106,14 +106,6 @@ module Asciidoctor::TemplatesCompiler
           EOF
         end
 
-        it 'defines method handles?' do
-          is_expected.to include <<-EOF.reindent(2)
-            def handles?(transform)
-              respond_to?("convert_\#{transform}") || respond_to?(transform)
-            end
-          EOF
-        end
-
         context 'when class_name' do
           shared_examples :converter_class do
             it 'declares converter class extending ::Asciidoctor::Converter::Base' do
@@ -170,7 +162,7 @@ module Asciidoctor::TemplatesCompiler
             it 'defines correct transform method for each item' do
               transforms_code.each do |name, code|
                 is_expected.to include <<-EOF.unindent.%(code.indent(4)).indent(2)
-                  def #{name}(node, opts = {})
+                  def convert_#{name}(node, opts = {})
                     node.extend(Helpers)
                     node.instance_eval do
                       converter.set_local_variables(binding, opts) unless opts.empty?
@@ -185,7 +177,7 @@ module Asciidoctor::TemplatesCompiler
           context 'and helpers_code is blank' do
             it 'does not extend node with Helpers in transform methods' do
               transforms_code.each do |name, _|
-                is_expected.to_not match(/def #{name}\([^)]*\).*?\.extend\(Helpers\).*?\bend\b/m)
+                is_expected.to_not match(/def convert_#{name}\([^)]*\).*?\.extend\(Helpers\).*?\bend\b/m)
               end
             end
           end
@@ -296,14 +288,14 @@ module Asciidoctor::TemplatesCompiler
 
           let(:convert_method_code) do <<-EOF.reindent(2)
             def convert(node, transform = nil, opts = {})
-              transform ||= node.node_name
+              meth_name = "convert_\#{transform || node.node_name}"
               opts ||= {}
               converter = %s
 
               if opts.empty?
-                converter.send(transform, node)
+                converter.send(meth_name, node)
               else
-                converter.send(transform, node, opts)
+                converter.send(meth_name, node, opts)
               end
             end
           EOF
@@ -342,7 +334,7 @@ module Asciidoctor::TemplatesCompiler
 
             it 'declares method #convert that uses @delegate_converter' do
               is_expected.to include \
-                convert_method_code % 'respond_to?(transform) ? self : @delegate_converter'
+                convert_method_code % 'respond_to?(meth_name) ? self : @delegate_converter'
             end
           end
         end

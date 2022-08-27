@@ -22,8 +22,7 @@ HELP_MSG = <<-EOF.unindent
 
   Options:
     -b --backend-info KEY=VAL[,...]  Parameters for backend_info: basebackend, outfilesuffix,
-                                     filetype, htmlsyntax, and supports_templates (requires
-                                     Asciidoctor >= 1.5.7).
+                                     filetype, htmlsyntax, and supports_templates.
 
     -n --class-name NAME             Full name of the converter class to generate (e.g.
                                      My::HTML::Converter) [default: Converter].

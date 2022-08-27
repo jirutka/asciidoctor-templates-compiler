@@ -72,7 +72,6 @@ module Asciidoctor::TemplatesCompiler
       out << helpers_code << "\n" unless @helpers_code.blank?
       out << initialization_code << "\n"
       out << convert_method_code << "\n"
-      out << handles_method_code << "\n"
       transform_methods_code(out)
       out << support_methods_code << "\n"
       out << tail_code
@@ -151,31 +150,22 @@ module Asciidoctor::TemplatesCompiler
 
     def convert_method_code
       converter = if @delegate_backend
-        'respond_to?(transform) ? self : @delegate_converter'
+        'respond_to?(meth_name) ? self : @delegate_converter'
       else
         'self'
       end
 
       <<-EOF.reindent(2)
         def convert(node, transform = nil, opts = {})
-          transform ||= node.node_name
+          meth_name = "convert_\#{transform || node.node_name}"
           opts ||= {}
           converter = #{converter}
 
           if opts.empty?
-            converter.send(transform, node)
+            converter.send(meth_name, node)
           else
-            converter.send(transform, node, opts)
+            converter.send(meth_name, node, opts)
           end
-        end
-      EOF
-    end
-
-    # This is for compatibility with Asciidoctor >=2.0.0 (see #5).
-    def handles_method_code
-      <<-EOF.reindent(2)
-        def handles?(transform)
-          respond_to?("convert_\#{transform}") || respond_to?(transform)
         end
       EOF
     end
@@ -197,7 +187,7 @@ module Asciidoctor::TemplatesCompiler
 
       @transforms_code.each do |name, code|
         out << "\n"
-        out << "  def #{name}(node, opts = {})\n"
+        out << "  def convert_#{name}(node, opts = {})\n"
         out << "    node.extend(Helpers)\n" unless @helpers_code.blank?
         out << "    node.instance_eval do\n"
         out << "      converter.set_local_variables(binding, opts) unless opts.empty?\n" unless @ignore_convert_opts  # rubocop:disable LineLength
