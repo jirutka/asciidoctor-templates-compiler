@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'asciidoctor', '~> 2.0'
   s.add_runtime_dependency 'corefines', '~> 1.2'
   s.add_runtime_dependency 'docopt', '~> 0.6'
-  s.add_runtime_dependency 'slim', '>= 2.1', '< 5.0'
+  s.add_runtime_dependency 'slim', '>= 2.1', '< 6.0'
   s.add_runtime_dependency 'ruby-beautify2', '~> 0.98'
 
   s.add_development_dependency 'rake', '~> 12.0'
